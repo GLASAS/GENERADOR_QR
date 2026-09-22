@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AuraQR Studio - Creador Profesional de Códigos QR</title>
+    <title>AuraQR Studio - Marcos Especializados HD</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-bg: rgba(255, 255, 255, 0.9);
             --card-glass: blur(16px);
             --text-primary: #1e293b;
             --text-secondary: #64748b;
@@ -36,7 +36,6 @@
             padding: 20px 15px;
         }
 
-        /* TÍTULO ELEGANTE Y CENTRADO */
         .header-title {
             text-align: center;
             margin-bottom: 25px;
@@ -269,7 +268,7 @@
         .btn-browse:hover { background: #e0e7ff; }
         .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
 
-        /* VISTA PREVIA ELEGANTE */
+        /* VISTA PREVIA ESPECÍFICA POR MARCO (CON ESTILOS ÚNICOS) */
         .qr-preview-box {
             background: #ffffff;
             padding: 35px;
@@ -287,19 +286,39 @@
             transition: all 0.3s ease;
         }
 
-        /* Marcos estructurados */
+        /* 0: Sin marco */
         .frame-style-0 { border: 1px solid var(--border); }
-        .frame-style-1 { border: 8px solid var(--frame-color) !important; border-radius: 28px !important; padding-bottom: 60px !important; }
-        .frame-style-1::after { content: var(--frame-phrase); position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 800; background: var(--frame-color); color: #fff; padding: 4px 16px; border-radius: 6px; white-space: nowrap; letter-spacing: 0.5px; }
         
-        .frame-style-2 { border: 8px solid var(--frame-color) !important; border-radius: 18px !important; padding-bottom: 60px !important; }
-        .frame-style-2::after { content: var(--frame-phrase); position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 800; background: var(--frame-color); color: #fff; width: 85%; text-align: center; padding: 4px 0; border-radius: 4px; letter-spacing: 0.5px; }
+        /* 1: Marco Cuadrado Clásico con etiqueta inferior flotante */
+        .frame-style-1 { border: 10px solid var(--frame-color) !important; border-radius: 24px !important; padding-bottom: 60px !important; }
+        .frame-style-1::after { content: var(--frame-phrase); position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 800; background: var(--frame-color); color: #fff; padding: 4px 16px; border-radius: 6px; white-space: nowrap; }
         
-        .frame-style-3 { border: 8px solid var(--frame-color) !important; border-radius: 28px !important; padding-top: 60px !important; }
-        .frame-style-3::before { content: var(--frame-phrase); position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 800; background: var(--frame-color); color: #fff; padding: 4px 16px; border-radius: 6px; white-space: nowrap; letter-spacing: 0.5px; }
+        /* 2: Marco con Barra Inferior de Ancho Completo */
+        .frame-style-2 { border: 10px solid var(--frame-color) !important; border-radius: 18px !important; padding-bottom: 60px !important; }
+        .frame-style-2::after { content: var(--frame-phrase); position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 800; background: var(--frame-color); color: #fff; width: 85%; text-align: center; padding: 4px 0; border-radius: 4px; }
         
-        .frame-style-4 { border: 6px solid var(--frame-color) !important; border-radius: 50% !important; padding: 40px !important; }
-        .frame-style-9 { border: 10px solid var(--frame-color) !important; border-radius: 20px !important; }
+        /* 3: Marco con Etiqueta Superior Flotante */
+        .frame-style-3 { border: 10px solid var(--frame-color) !important; border-radius: 24px !important; padding-top: 60px !important; }
+        .frame-style-3::before { content: var(--frame-phrase); position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 800; background: var(--frame-color); color: #fff; padding: 4px 16px; border-radius: 6px; white-space: nowrap; }
+        
+        /* 4: Marco Circular */
+        .frame-style-4 { border: 8px solid var(--frame-color) !important; border-radius: 50% !important; padding: 40px !important; }
+        
+        /* 5: Marco Estilo Móvil / Teléfono con etiqueta superior */
+        .frame-style-5 { border: 10px solid var(--frame-color) !important; border-radius: 28px !important; padding-top: 55px !important; border-top-width: 25px !important; }
+        .frame-style-5::before { content: "📱 " var(--frame-phrase); position: absolute; top: 6px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.7rem; font-weight: 700; color: #ffffff; white-space: nowrap; }
+
+        /* 6: Marco Estilo Portapapeles / Clip */
+        .frame-style-6 { border: 10px solid var(--frame-color) !important; border-radius: 16px !important; padding-top: 55px !important; }
+        .frame-style-6::before { content: "📋 " var(--frame-phrase); position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.7rem; font-weight: 700; color: var(--frame-color); background: #f8fafc; padding: 2px 10px; border-radius: 6px; border: 1px solid var(--border); white-space: nowrap; }
+
+        /* 7: Marco Ovalado / Píldora de Mensaje */
+        .frame-style-7 { border: 10px solid var(--frame-color) !important; border-radius: 40px !important; padding-bottom: 55px !important; }
+        .frame-style-7::after { content: var(--frame-phrase); position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.7rem; font-weight: 700; background: var(--frame-color); color: #fff; padding: 3px 16px; border-radius: 20px; white-space: nowrap; }
+
+        /* 8: Marco de Burbuja de Diálogo */
+        .frame-style-8 { border: 10px solid var(--frame-color) !important; border-radius: 20px !important; padding-top: 55px !important; }
+        .frame-style-8::before { content: "💬 " var(--frame-phrase); position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.7rem; font-weight: 700; color: var(--frame-color); background: #ffffff; padding: 2px 12px; border-radius: 8px; border: 2px solid var(--frame-color); white-space: nowrap; }
 
         #qrcode { display: flex; justify-content: center; align-items: center; position: relative; width: 190px; height: 190px; }
         #qrcode canvas, #qrcode img { width: 190px !important; height: 190px !important; display: block; }
@@ -355,7 +374,6 @@
 </head>
 <body>
 
-    <!-- TÍTULO ELEGANTE Y CENTRADO -->
     <div class="header-title">
         <h1>AuraQR Studio</h1>
         <p>Diseña y personaliza códigos QR profesionales al instante</p>
@@ -444,14 +462,18 @@
                 </div>
 
                 <div id="tab-frame" class="tab-content active">
-                    <label>Estilo de marco:</label>
+                    <label>Selecciona un marco:</label>
                     <div class="scroll-grid">
+                        <!-- Estilos exactos correspondientes a los iconos profesionales de la interfaz -->
                         <div class="option-card active" onclick="cambiarMarco(0, this)">✕</div>
-                        <div class="option-card" onclick="cambiarMarco(1, this)"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6z"/></svg></div>
-                        <div class="option-card" onclick="cambiarMarco(2, this)"><svg viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5z"/></svg></div>
-                        <div class="option-card" onclick="cambiarMarco(3, this)"><svg viewBox="0 0 24 24"><path d="M5 2h14v20H5V2zm2 4v12h10V6H7z"/></svg></div>
-                        <div class="option-card" onclick="cambiarMarco(4, this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="3"/></svg></div>
-                        <div class="option-card" onclick="cambiarMarco(9, this)"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(1, this)" title="Cuadrado Clásico"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6z"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(2, this)" title="Barra Inferior"><svg viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5z"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(3, this)" title="Etiqueta Superior"><svg viewBox="0 0 24 24"><path d="M5 2h14v20H5V2zm2 4v12h10V6H7z"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(4, this)" title="Circular"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="3"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(5, this)" title="Móvil"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(6, this)" title="Portapapeles"><svg viewBox="0 0 24 24"><path d="M6 2h12v20H6V2zm2 2v16h8V4H8z"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(7, this)" title="Píldora"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(8, this)" title="Burbuja de Diálogo"><svg viewBox="0 0 24 24"><path d="M21 6H3v12h6l4 4 4-4h4V6z" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
                     </div>
 
                     <div class="row-inputs" style="margin-top: 10px;">
@@ -713,6 +735,9 @@
             generarQR();
         }
 
+        // ==========================================================
+        // MOTOR DE RENDERIZADO MAESTRO PARA CADA MARCO ESPECÍFICO EN HD
+        // ==========================================================
         function descargarQRMovil() {
             let textoActual = obtenerTextoQR();
             if (!textoActual) {
@@ -737,28 +762,115 @@
                 ctx.lineWidth = 30;
                 ctx.strokeStyle = frameColor;
                 ctx.fillStyle = frameColor;
+                ctx.font = "800 28px 'Plus Jakarta Sans', sans-serif";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
 
-                if (idx === 1 || idx === 2 || idx === 3) {
-                    ctx.beginPath();
-                    ctx.roundRect(50, 50, size - 100, size - 100, 60);
-                    ctx.stroke();
-
-                    ctx.font = "800 30px 'Plus Jakarta Sans', sans-serif";
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "middle";
-                    
-                    let boxW = ctx.measureText(framePhrase).width + 80;
-                    let boxY = (idx === 3) ? 75 : size - 125;
-                    
-                    ctx.beginPath();
-                    ctx.roundRect(size / 2 - boxW / 2, boxY, boxW, 55, 12);
-                    ctx.fill();
-                    ctx.fillStyle = "#ffffff";
-                    ctx.fillText(framePhrase, size / 2, boxY + 27.5);
-                } else {
+                if (idx === 1) {
+                    // Marco 1: Cuadrado Clásico con etiqueta flotante inferior
                     ctx.beginPath();
                     ctx.roundRect(50, 50, size - 100, size - 100, 40);
                     ctx.stroke();
+
+                    let boxW = ctx.measureText(framePhrase).width + 80;
+                    ctx.beginPath();
+                    ctx.roundRect(size / 2 - boxW / 2, size - 120, boxW, 52, 10);
+                    ctx.fill();
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillText(framePhrase, size / 2, size - 94);
+                } 
+                else if (idx === 2) {
+                    // Marco 2: Barra inferior completa
+                    ctx.beginPath();
+                    ctx.roundRect(50, 50, size - 100, size - 100, 40);
+                    ctx.stroke();
+
+                    ctx.fillStyle = frameColor;
+                    ctx.beginPath();
+                    ctx.roundRect(50, size - 110, size - 100, 60, [0, 0, 36, 36]);
+                    ctx.fill();
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillText(framePhrase, size / 2, size - 80);
+                } 
+                else if (idx === 3) {
+                    // Marco 3: Etiqueta superior flotante
+                    ctx.beginPath();
+                    ctx.roundRect(50, 50, size - 100, size - 100, 40);
+                    ctx.stroke();
+
+                    let boxW = ctx.measureText(framePhrase).width + 80;
+                    ctx.beginPath();
+                    ctx.roundRect(size / 2 - boxW / 2, 68, boxW, 52, 10);
+                    ctx.fill();
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillText(framePhrase, size / 2, 94);
+                } 
+                else if (idx === 4) {
+                    // Marco 4: Circular
+                    ctx.beginPath();
+                    ctx.arc(size / 2, size / 2, size / 2 - 50, 0, Math.PI * 2);
+                    ctx.stroke();
+                } 
+                else if (idx === 5) {
+                    // Marco 5: Estilo Móvil / Teléfono
+                    ctx.beginPath();
+                    ctx.roundRect(50, 50, size - 100, size - 100, 50);
+                    ctx.stroke();
+
+                    ctx.fillStyle = frameColor;
+                    ctx.beginPath();
+                    ctx.roundRect(50, 50, size - 100, 75, [45, 45, 0, 0]);
+                    ctx.fill();
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillText("📱 " + framePhrase, size / 2, 87);
+                } 
+                else if (idx === 6) {
+                    // Marco 6: Portapapeles
+                    ctx.beginPath();
+                    ctx.roundRect(50, 50, size - 100, size - 100, 30);
+                    ctx.stroke();
+
+                    let boxW = ctx.measureText("📋 " + framePhrase).width + 60;
+                    ctx.fillStyle = "#f8fafc";
+                    ctx.beginPath();
+                    ctx.roundRect(size / 2 - boxW / 2, 65, boxW, 46, 8);
+                    ctx.fill();
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = frameColor;
+                    ctx.stroke();
+                    ctx.fillStyle = frameColor;
+                    ctx.fillText("📋 " + framePhrase, size / 2, 88);
+                } 
+                else if (idx === 7) {
+                    // Marco 7: Píldora de mensaje
+                    ctx.beginPath();
+                    ctx.roundRect(50, 50, size - 100, size - 100, 120);
+                    ctx.stroke();
+
+                    let boxW = ctx.measureText(framePhrase).width + 80;
+                    ctx.fillStyle = frameColor;
+                    ctx.beginPath();
+                    ctx.roundRect(size / 2 - boxW / 2, size - 115, boxW, 50, 25);
+                    ctx.fill();
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillText(framePhrase, size / 2, size - 90);
+                } 
+                else if (idx === 8) {
+                    // Marco 8: Burbuja de diálogo
+                    ctx.beginPath();
+                    ctx.roundRect(50, 50, size - 100, size - 100, 30);
+                    ctx.stroke();
+
+                    let boxW = ctx.measureText("💬 " + framePhrase).width + 70;
+                    ctx.fillStyle = "#ffffff";
+                    ctx.beginPath();
+                    ctx.roundRect(size / 2 - boxW / 2, 65, boxW, 50, 12);
+                    ctx.fill();
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = frameColor;
+                    ctx.stroke();
+                    ctx.fillStyle = frameColor;
+                    ctx.fillText("💬 " + framePhrase, size / 2, 90);
                 }
             }
 
@@ -766,20 +878,25 @@
             const qrImageElement = document.querySelector("#qrcode img");
 
             const continuarProceso = (qrSourceImg) => {
-                let qrSize = 650;
+                let qrSize = 600;
                 let qrX = (size - qrSize) / 2;
                 let qrY = (size - qrSize) / 2;
+                
+                // Ajustes de posición si hay etiquetas superiores/inferiores para evitar superposición
+                if (idx === 1 || idx === 2 || idx === 7) qrY -= 20;
+                if (idx === 3 || idx === 5 || idx === 6 || idx === 8) qrY += 15;
+
                 ctx.drawImage(qrSourceImg, qrX, qrY, qrSize, qrSize);
 
                 if (configQR.logoType !== 'none' && configQR.logoRaw) {
                     const renderizarLogo = (imgObj) => {
-                        let lSize = 140;
+                        let lSize = 130;
                         let lX = (size - lSize) / 2;
-                        let lY = (size - lSize) / 2;
+                        let lY = qrY + (qrSize - lSize) / 2;
 
                         ctx.fillStyle = "#ffffff";
                         ctx.beginPath();
-                        ctx.roundRect(lX - 10, lY - 10, lSize + 20, lSize + 20, 16);
+                        ctx.roundRect(lX - 8, lY - 8, lSize + 16, lSize + 16, 14);
                         ctx.fill();
                         ctx.drawImage(imgObj, lX, lY, lSize, lSize);
                         finalizarGeneracion(canvasMaster);
