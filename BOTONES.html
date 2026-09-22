@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panel de Accesos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #102a43;
+            --text-muted: #627d98;
+            --accent: #096dd9;
+            --accent-gradient: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+            --shadow: 0 4px 12px rgba(16, 42, 67, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 12px;
+        }
+
+        .mobile-frame {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+            padding: 20px 16px;
+            box-shadow: 0 16px 32px rgba(16, 42, 67, 0.08);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(18, 53, 98, 0.08);
+        }
+
+        .header-title h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.3px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #e6f7ff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #096dd9;
+        }
+
+        .status-dot {
+            width: 5px;
+            height: 5px;
+            background-color: #1890ff;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        #button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sheet-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 1);
+            padding: 10px 14px;
+            border-radius: 14px;
+            text-decoration: none;
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sheet-card:hover {
+            transform: translateY(-1px);
+            background: #ffffff;
+            border-color: #91d5ff;
+            box-shadow: 0 6px 16px rgba(9, 109, 217, 0.08);
+        }
+
+        .sheet-card:active {
+            transform: scale(0.98);
+        }
+
+        .card-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: white;
+            box-shadow: 0 2px 6px rgba(9, 109, 217, 0.2);
+        }
+
+        .card-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .card-text {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .card-title {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-subtitle {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .external-icon {
+            width: 14px;
+            height: 14px;
+            fill: var(--text-muted);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+            opacity: 0.7;
+        }
+
+        .sheet-card:hover .external-icon {
+            transform: translate(1px, -1px);
+            fill: var(--accent);
+            opacity: 1;
+        }
+
+        .state-message {
+            text-align: center;
+            padding: 30px 16px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-frame">
+        <header>
+            <div class="header-title">
+                <h1>Panel de Accesos</h1>
+            </div>
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span id="status-text">En línea</span>
+            </div>
+        </header>
+
+        <div id="button-container">
+            <div class="state-message">Cargando registros...</div>
+        </div>
+    </div>
+
+    <script>
+        // Tu URL actualizada de Apps Script integrada correctamente
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyxsQ-O8kkvh7harM4PlhWcP2eq462Mzc3zni4-WgtSmX5LOjrm8X_q7TnlWGzGjsiCtg/exec';
+
+        async function fetchSheetData() {
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const rows = await response.json();
+                renderUI(rows);
+            } catch (error) {
+                console.error('Error al conectar:', error);
+                document.getElementById('status-text').innerText = 'Sin conexión';
+                const container = document.getElementById('button-container');
+                container.innerHTML = `
+                    <div class="state-message" style="color: #ff4d4f;">
+                        <b>Bloqueo de seguridad CORS detectado.</b><br><br>
+                        Sube este archivo HTML a GitHub Pages o pruébalo mediante un servidor local para que Google permita leer los datos.
+                    </div>
+                `;
+            }
+        }
+
+        function renderUI(rows) {
+            const container = document.getElementById('button-container');
+            
+            if (!rows || rows.length <= 1) {
+                container.innerHTML = `<div class="state-message">No hay registros a partir de la fila 2.</div>`;
+                return;
+            }
+
+            let html = '';
+
+            // Recorremos desde la fila 2 (índice 1) en adelante
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const linkUrl = row[0] ? String(row[0]).trim() : ''; // Columna A (Enlace oculto)
+                const titleName = row[1] ? String(row[1]).trim() : ''; // Columna B (Nombre principal)
+
+                // Validamos que la Columna A tenga un enlace válido
+                if (linkUrl && (linkUrl.startsWith('http://') || linkUrl.startsWith('https://'))) {
+                    const displayTitle = titleName !== '' ? titleName : `Acceso #${i}`;
+
+                    html += `
+                        <a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="sheet-card">
+                            <div class="card-content">
+                                <div class="card-icon">
+                                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                                </div>
+                                <div class="card-text">
+                                    <span class="card-title">${displayTitle}</span>
+                                    <span class="card-subtitle">Enlace directo</span>
+                                </div>
+                            </div>
+                            <svg class="external-icon" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+                        </a>
+                    `;
+                }
+            }
+
+            if (html === '') {
+                container.innerHTML = `<div class="state-message">No se encontraron enlaces válidos en la Columna A.</div>`;
+            } else {
+                container.innerHTML = html;
+            }
+        }
+
+        // Carga inicial y actualización automática cada 4 segundos
+        fetchSheetData();
+        setInterval(fetchSheetData, 4000);
+    </script>
+</body>
+</html>
