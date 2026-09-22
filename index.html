@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Generador QR Móvil - Android & iOS HD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --accent: #319795;
+            --accent-hover: #2c7a7b;
+            --border: #e2e8f0;
+            
+            --frame-color: #000000;
+            --frame-phrase: "SCAN ME";
+            --frame-font: 'Segoe UI', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: row;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            max-width: 1150px;
+            width: 100%;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .config-panel {
+            flex: 1.3;
+            padding: 20px;
+            border-right: 1px solid var(--border);
+            max-height: 85vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .preview-panel {
+            flex: 1;
+            background: #fafbfc;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h2 { font-size: 1rem; color: var(--text-primary); margin-bottom: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        
+        .step-badge {
+            background-color: #2d3748;
+            color: white;
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .types-grid-top {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .type-btn {
+            background: #f7fafc;
+            border: 1px solid var(--border);
+            padding: 8px 2px;
+            border-radius: 8px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .type-btn.active { background: #e6fffa; border-color: var(--accent); color: var(--accent); }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+        
+        input[type="text"], input[type="email"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+        textarea { resize: vertical; min-height: 60px; }
+
+        .row-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Caja de Recortador Nativo */
+        .url-shortener-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .btn-shorten {
+            background-color: #2b6cb0;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+        .btn-shorten:hover { background-color: #2c5282; }
+
+        .design-tabs {
+            display: flex;
+            gap: 15px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        .tab-btn {
+            padding: 8px 0;
+            background: none;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+        }
+        .tab-btn.active { color: var(--accent); }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .scroll-grid {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .scroll-grid::-webkit-scrollbar { height: 4px; }
+        .scroll-grid::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
+
+        .option-card {
+            min-width: 50px;
+            height: 50px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.65rem;
+            font-weight: bold;
+            color: var(--text-secondary);
+            position: relative;
+            flex-shrink: 0;
+        }
+        .option-card.active { border-color: var(--accent); background: #e6fffa; color: var(--accent); }
+        .option-card svg { width: 22px; height: 22px; fill: #2d3748; }
+        .option-card.active svg { fill: var(--accent); }
+
+        .logos-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .color-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 15px;
+        }
+        .color-input-wrapper { display: flex; align-items: center; gap: 6px; }
+        .color-picker-btn {
+            width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; padding: 0; overflow: hidden; flex-shrink: 0;
+        }
+        .color-picker-btn input[type="color"] { width: 150%; height: 150%; transform: translate(-25%, -25%); cursor: pointer; }
+
+        .checkbox-container {
+            display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-top: 6px; cursor: pointer;
+        }
+        .checkbox-container input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+        .upload-box {
+            display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; background: #fff; padding: 4px; margin-bottom: 15px; gap: 8px;
+        }
+        .upload-box input[type="text"] { flex: 1; border: none; padding: 6px; font-size: 0.8rem; background: transparent; }
+        .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; }
+        .btn-browse { background: #edf2f7; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--border); cursor: pointer; }
+        .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
+
+        .qr-preview-box {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 300px;
+            height: 300px;
+            position: relative;
+            border: 1px solid var(--border);
+        }
+
+        .frame-style-0 { border: 1px solid var(--border); }
+        .frame-style-1 { border: 8px solid var(--frame-color) !important; border-radius: 24px !important; padding-bottom: 55px !important; }
+        .frame-style-1::after { content: var(--frame-phrase); position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 900; background: var(--frame-color); color: #fff; padding: 4px 14px; border-radius: 6px; white-space: nowrap; }
+        
+        .frame-style-2 { border: 8px solid var(--frame-color) !important; border-radius: 16px !important; padding-bottom: 55px !important; }
+        .frame-style-2::after { content: var(--frame-phrase); position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 900; background: var(--frame-color); color: #fff; width: 85%; text-align: center; padding: 4px 0; border-radius: 4px; }
+        
+        .frame-style-3 { border: 8px solid var(--frame-color) !important; border-radius: 24px !important; padding-top: 55px !important; }
+        .frame-style-3::before { content: var(--frame-phrase); position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 900; background: var(--frame-color); color: #fff; padding: 4px 14px; border-radius: 6px; white-space: nowrap; }
+        
+        .frame-style-4 { border: 6px solid var(--frame-color) !important; border-radius: 50% !important; padding: 35px !important; }
+        .frame-style-9 { border: 10px solid var(--frame-color) !important; border-radius: 16px !important; }
+
+        #qrcode { display: flex; justify-content: center; align-items: center; position: relative; width: 180px; height: 180px; }
+        #qrcode canvas, #qrcode img { width: 180px !important; height: 180px !important; display: block; }
+
+        #qr-logo-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            border: 2px solid #fff;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+        #qr-logo-container img { width: 100%; height: 100%; object-fit: cover; }
+        #qr-logo-container svg { width: 24px; height: 24px; fill: var(--accent); }
+
+        .btn-download {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(49, 151, 149, 0.3);
+        }
+        .btn-download:active { background-color: var(--accent-hover); transform: scale(0.98); }
+
+        @media (max-width: 768px) {
+            body { padding: 5px; align-items: flex-start; }
+            .app-container { flex-direction: column; max-width: 100%; border-radius: 12px; }
+            .config-panel { max-height: none; border-right: none; border-bottom: 1px solid var(--border); padding: 15px; }
+            .preview-panel { padding: 15px; }
+            .qr-preview-box { width: 260px; height: 260px; padding: 20px; }
+            #qrcode, #qrcode canvas, #qrcode img { width: 150px !important; height: 150px !important; }
+            .types-grid-top { grid-template-columns: repeat(4, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- PANEL DE CONFIGURACIÓN -->
+        <div class="config-panel">
+            <div class="types-grid-top">
+                <div class="type-btn active" onclick="seleccionarTipo('Enlace', this)">🔗 Enlace</div>
+                <div class="type-btn" onclick="seleccionarTipo('Texto', this)">📝 Texto</div>
+                <div class="type-btn" onclick="seleccionarTipo('E-mail', this)">✉️ E-mail</div>
+                <div class="type-btn" onclick="seleccionarTipo('Llamada', this)">📞 Llamada</div>
+                <div class="type-btn" onclick="seleccionarTipo('SMS', this)">💬 SMS</div>
+                <div class="type-btn" onclick="seleccionarTipo('V-card', this)">📇 V-card</div>
+                <div class="type-btn" onclick="seleccionarTipo('WhatsApp', this)">🟢 WhatsApp</div>
+                <div class="type-btn" onclick="seleccionarTipo('WI-FI', this)">📶 WI-FI</div>
+                <div class="type-btn" onclick="seleccionarTipo('PDF', this)">📄 PDF</div>
+                <div class="type-btn" onclick="seleccionarTipo('Aplicación', this)">📱 App</div>
+            </div>
+
+            <div class="form-group">
+                <h2><span class="step-badge">1</span> Contenido</h2>
+                
+                <div id="fields-SMS" class="dynamic-fields" style="display:none;">
+                    <div class="row-inputs">
+                        <div>
+                            <label>País</label>
+                            <select id="smsCountry"><option value="+34">+34</option><option value="+57" selected>+57</option><option value="+1">+1</option></select>
+                        </div>
+                        <div>
+                            <label>Teléfono</label>
+                            <input type="text" id="smsPhone" placeholder="Número">
+                        </div>
+                    </div>
+                    <div><label>Mensaje</label><textarea id="smsBody" placeholder="Mensaje"></textarea></div>
+                </div>
+
+                <div id="fields-V-card" class="dynamic-fields" style="display:none;">
+                    <div class="row-inputs">
+                        <div><label>Nombre</label><input type="text" id="vcName" placeholder="Nombre"></div>
+                        <div><label>Apellido</label><input type="text" id="vcLastName" placeholder="Apellido"></div>
+                    </div>
+                    <div class="row-inputs">
+                        <div><label>Teléfono</label><input type="text" id="vcPhone" placeholder="Teléfono"></div>
+                        <div><label>Móvil</label><input type="text" id="vcMobile" placeholder="Móvil"></div>
+                    </div>
+                </div>
+
+                <div id="fields-WhatsApp" class="dynamic-fields" style="display:none;">
+                    <div class="row-inputs">
+                        <div>
+                            <label>País</label>
+                            <select id="waCountry"><option value="+57" selected>+57</option><option value="+34">+34</option><option value="+1">+1</option></select>
+                        </div>
+                        <div><label>Teléfono</label><input type="text" id="waPhone" placeholder="Número"></div>
+                    </div>
+                    <div><label>Mensaje</label><textarea id="waBody" placeholder="Mensaje"></textarea></div>
+                </div>
+
+                <div id="fields-WI-FI" class="dynamic-fields" style="display:none;">
+                    <div class="row-inputs">
+                        <div><label>Red (SSID)</label><input type="text" id="wifiSsid" placeholder="SSID"></div>
+                        <div>
+                            <label>Seguridad</label>
+                            <select id="wifiEnc"><option value="WPA">WPA</option><option value="WEP">WEP</option><option value="nopass">Ninguna</option></select>
+                        </div>
+                    </div>
+                    <div><label>Contraseña</label><input type="text" id="wifiPass" placeholder="Contraseña"></div>
+                </div>
+
+                <div id="fields-generic" class="dynamic-fields">
+                    <label id="genericLabel" for="genericInput">Enlace Largo (Google Apps Script)</label>
+                    <input type="text" id="genericInput" value="https://script.google.com/macros/s/..." placeholder="https://">
+
+                    <!-- SECCIÓN: Recortador Interno Nativo -->
+                    <div class="url-shortener-box">
+                        <label>Acortar URL de forma nativa:</label>
+                        <button class="btn-shorten" type="button" onclick="recortarUrlNativa()">✂️ Generar URL Corta en glambulancias.com</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+                <h2><span class="step-badge">2</span> Diseño QR</h2>
+                
+                <div class="design-tabs">
+                    <button class="tab-btn active" onclick="cambiarTab('frame', this)">Marco</button>
+                    <button class="tab-btn" onclick="cambiarTab('forma', this)">Color</button>
+                    <button class="tab-btn" onclick="cambiarTab('logo', this)">Logo</button>
+                </div>
+
+                <div id="tab-frame" class="tab-content active">
+                    <label>Estilo de marco:</label>
+                    <div class="scroll-grid">
+                        <div class="option-card active" onclick="cambiarMarco(0, this)">✕</div>
+                        <div class="option-card" onclick="cambiarMarco(1, this)"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4V4zm2 2v12h12V6H6z"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(2, this)"><svg viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5z"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(3, this)"><svg viewBox="0 0 24 24"><path d="M5 2h14v20H5V2zm2 4v12h10V6H7z"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(4, this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="3"/></svg></div>
+                        <div class="option-card" onclick="cambiarMarco(9, this)"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3"/></svg></div>
+                    </div>
+
+                    <div class="row-inputs" style="margin-top: 10px;">
+                        <div>
+                            <label for="framePhraseInput">Texto marco</label>
+                            <input type="text" id="framePhraseInput" value="SCAN ME" oninput="actualizarFraseMarco()">
+                        </div>
+                        <div>
+                            <label for="frameColorInput">Color marco</label>
+                            <div class="color-input-wrapper">
+                                <input type="text" id="frameColorInput" value="#000000" oninput="actualizarColorMarcoTexto('text')">
+                                <div class="color-picker-btn"><input type="color" id="frameColorPicker" value="#000000" oninput="actualizarColorMarcoTexto('picker')"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-forma" class="tab-content">
+                    <div class="color-row">
+                        <div>
+                            <label>Fondo</label>
+                            <div class="color-input-wrapper">
+                                <input type="text" id="bgColorText" value="#FFFFFF" oninput="actualizarColorTexto('bg')">
+                                <div class="color-picker-btn"><input type="color" id="bgColorPicker" value="#FFFFFF" oninput="actualizarColorPicker('bg')"></div>
+                            </div>
+                            <label class="checkbox-container"><input type="checkbox" id="transparentBg" onchange="toggleTransparencia()"> Transparente</label>
+                        </div>
+                        <div>
+                            <label>Puntos QR</label>
+                            <div class="color-input-wrapper">
+                                <input type="text" id="fgColorText" value="#000000" oninput="actualizarColorTexto('fg')">
+                                <div class="color-picker-btn"><input type="color" id="fgColorPicker" value="#000000" oninput="actualizarColorTexto('fg')"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-logo" class="tab-content">
+                    <label>Subir logo:</label>
+                    <div class="upload-box">
+                        <input type="text" id="fileNameDisplay" value="Elegir archivo" readonly>
+                        <div class="upload-btn-wrapper">
+                            <button class="btn-browse">Buscar</button>
+                            <input type="file" id="logoFileinput" accept="image/*" onchange="cargarLogoLocal(event)">
+                        </div>
+                    </div>
+
+                    <label>O predeterminados:</label>
+                    <div class="logos-grid">
+                        <div class="option-card active" onclick="seleccionarLogoPreset('none', this)"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#718096"/></svg></div>
+                        <div class="option-card" onclick="seleccionarLogoPreset('link', this)"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1z" fill="#6b46c1"/></svg></div>
+                        <div class="option-card" onclick="seleccionarLogoPreset('whatsapp', this)"><svg viewBox="0 0 24 24"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.42 1.27 4.88L2 22l5.25-1.35c1.41.77 3.03 1.21 4.79 1.21 5.52 0 10-4.48 10-10s-4.48-10-10-10z" fill="#38a169"/></svg></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL DE VISTA PREVIA -->
+        <div class="preview-panel">
+            <h2 style="margin-bottom: 15px;"><span class="step-badge">3</span> Vista Previa y Descarga</h2>
+            
+            <div id="qrFrameContainer" class="qr-preview-box frame-style-0">
+                <div id="qrcode"></div>
+                <div id="qr-logo-container"></div>
+            </div>
+
+            <button class="btn-download" onclick="descargarQRMovil()">Descargar Imagen HD</button>
+        </div>
+
+    </div>
+
+    <script>
+        let tipoActual = "Enlace";
+        let configQR = {
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            logoRaw: null,
+            logoType: 'none',
+            marcoIndex: 0
+        };
+
+        function obtenerTextoQR() {
+            if (tipoActual === "SMS") {
+                let country = document.getElementById("smsCountry").value;
+                let phone = document.getElementById("smsPhone").value.trim();
+                let body = encodeURIComponent(document.getElementById("smsBody").value.trim());
+                return `SMSTO:${country}${phone}:${body}`;
+            } else if (tipoActual === "V-card") {
+                let name = document.getElementById("vcName").value.trim();
+                let lname = document.getElementById("vcLastName").value.trim();
+                let phone = document.getElementById("vcPhone").value.trim();
+                let mobile = document.getElementById("vcMobile").value.trim();
+                return `BEGIN:VCARD\nVERSION:3.0\nN:${lname};${name};;;\nFN:${name} ${lname}\nTEL;TYPE=WORK:${phone}\nTEL;TYPE=CELL:${mobile}\nEND:VCARD`;
+            } else if (tipoActual === "WhatsApp") {
+                let country = document.getElementById("waCountry").value.replace('+', '');
+                let phone = document.getElementById("waPhone").value.trim();
+                let body = encodeURIComponent(document.getElementById("waBody").value.trim());
+                return `https://wa.me/${country}${phone}?text=${body}`;
+            } else if (tipoActual === "WI-FI") {
+                let ssid = document.getElementById("wifiSsid").value.trim();
+                let enc = document.getElementById("wifiEnc").value;
+                let pass = document.getElementById("wifiPass").value.trim();
+                return `WIFI:S:${ssid};T:${enc};P:${pass};;`;
+            } else {
+                return document.getElementById("genericInput").value.trim() || "https://glambulancias.com/";
+            }
+        }
+
+        let qrcodeObj = new QRCode(document.getElementById("qrcode"), {
+            text: obtenerTextoQR(),
+            width: 180,
+            height: 180,
+            colorDark: configQR.colorDark,
+            colorLight: configQR.colorLight,
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        const inputsMonitoreados = ["smsCountry", "smsPhone", "smsBody", "vcName", "vcLastName", "vcPhone", "vcMobile", "waCountry", "waPhone", "waBody", "wifiSsid", "wifiEnc", "wifiPass", "genericInput"];
+        inputsMonitoreados.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) {
+                el.addEventListener("input", generarQR);
+                el.addEventListener("change", generarQR);
+            }
+        });
+
+        function generarQR() {
+            let texto = obtenerTextoQR();
+            document.getElementById("qrcode").innerHTML = "";
+            qrcodeObj = new QRCode(document.getElementById("qrcode"), {
+                text: texto,
+                width: 180,
+                height: 180,
+                colorDark: configQR.colorDark,
+                colorLight: configQR.colorLight,
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // Función para crear un enlace corto nativo usando una estructura limpia compatible con tu servidor
+        function recortarUrlNativa() {
+            let inputUrl = document.getElementById("genericInput").value.trim();
+            if (!inputUrl) {
+                alert("Por favor, ingresa una URL válida.");
+                return;
+            }
+
+            // Genera un identificador único corto aleatorio de 5 caracteres
+            let idCorto = Math.random().toString(36).substring(2, 7);
+            
+            // Crea la URL corta apuntando a tu página con el parámetro limpio
+            let urlCorta = `https://glambulancias.com/redireccion.html?r=${idCorto}&target=` + encodeURIComponent(inputUrl);
+            
+            document.getElementById("genericInput").value = urlCorta;
+            generarQR();
+        }
+
+        function seleccionarTipo(nombreTipo, elemento) {
+            document.querySelectorAll('.types-grid-top .type-btn').forEach(el => el.classList.remove('active'));
+            elemento.classList.add('active');
+            tipoActual = nombreTipo;
+
+            document.querySelectorAll('.dynamic-fields').forEach(el => el.style.display = 'none');
+            if (nombreTipo === "SMS") {
+                document.getElementById("fields-SMS").style.display = "block";
+            } else if (nombreTipo === "V-card") {
+                document.getElementById("fields-V-card").style.display = "block";
+            } else if (nombreTipo === "WhatsApp") {
+                document.getElementById("fields-WhatsApp").style.display = "block";
+            } else if (nombreTipo === "WI-FI") {
+                document.getElementById("fields-WI-FI").style.display = "block";
+            } else {
+                document.getElementById("fields-generic").style.display = "block";
+                document.getElementById("genericLabel").innerText = `Introduce tu ${nombreTipo.toLowerCase()}`;
+                if(nombreTipo === "Enlace") {
+                    document.getElementById("genericInput").value = "https://script.google.com/macros/s/...";
+                } else {
+                    document.getElementById("genericInput").value = "Información";
+                }
+            }
+            generarQR();
+        }
+
+        function cambiarTab(tabName, elemento) {
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            elemento.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        function cambiarMarco(index, elemento) {
+            document.querySelectorAll('#tab-frame .option-card').forEach(el => el.classList.remove('active'));
+            elemento.classList.add('active');
+            configQR.marcoIndex = index;
+            document.getElementById('qrFrameContainer').className = `qr-preview-box frame-style-${index}`;
+        }
+
+        function actualizarFraseMarco() {
+            let texto = document.getElementById("framePhraseInput").value || "SCAN ME";
+            document.documentElement.style.setProperty('--frame-phrase', `"${texto}"`);
+        }
+
+        function actualizarColorMarcoTexto(origen) {
+            let val = origen === 'text' ? document.getElementById("frameColorInput").value : document.getElementById("frameColorPicker").value;
+            if(origen === 'picker') document.getElementById("frameColorInput").value = val.toUpperCase();
+            document.documentElement.style.setProperty('--frame-color', val);
+        }
+
+        const svgPresets = {
+            link: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1z" fill="#6b46c1"/></svg>',
+            whatsapp: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.42 1.27 4.88L2 22l5.25-1.35c1.41.77 3.03 1.21 4.79 1.21 5.52 0 10-4.48 10-10s-4.48-10-10-10z" fill="#38a169"/></svg>'
+        };
+
+        function seleccionarLogoPreset(tipo, elemento) {
+            document.querySelectorAll('#tab-logo .option-card').forEach(el => el.classList.remove('active'));
+            elemento.classList.add('active');
+            const container = document.getElementById("qr-logo-container");
+            if (tipo === 'none') {
+                container.style.display = "none";
+                configQR.logoType = 'none';
+            } else {
+                container.style.display = "flex";
+                container.innerHTML = svgPresets[tipo];
+                configQR.logoType = 'svg';
+                configQR.logoRaw = svgPresets[tipo];
+            }
+        }
+
+        function cargarLogoLocal(event) {
+            const archivo = event.target.files[0];
+            if (archivo) {
+                document.getElementById("fileNameDisplay").value = archivo.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    configQR.logoType = 'image';
+                    configQR.logoRaw = e.target.result;
+                    const container = document.getElementById("qr-logo-container");
+                    container.style.display = "flex";
+                    container.innerHTML = `<img src="${e.target.result}" alt="Logo">`;
+                }
+                reader.readAsDataURL(archivo);
+            }
+        }
+
+        function actualizarColorPicker(tipo) {
+            let val = document.getElementById(tipo === 'bg' ? "bgColorPicker" : "fgColorPicker").value;
+            document.getElementById(tipo === 'bg' ? "bgColorText" : "fgColorText").value = val.toUpperCase();
+            if (tipo === 'bg' && !document.getElementById("transparentBg").checked) configQR.colorLight = val;
+            if (tipo === 'fg') configQR.colorDark = val;
+            generarQR();
+        }
+
+        function actualizarColorTexto(tipo) {
+            let val = document.getElementById(tipo === 'bg' ? "bgColorText" : "fgColorText").value;
+            if(val.startsWith('#') && (val.length === 4 || val.length === 7)) {
+                if(tipo === 'bg') {
+                    document.getElementById("bgColorPicker").value = val;
+                    if(!document.getElementById("transparentBg").checked) configQR.colorLight = val;
+                } else {
+                    document.getElementById("fgColorPicker").value = val;
+                    configQR.colorDark = val;
+                }
+                generarQR();
+            }
+        }
+
+        function toggleTransparencia() {
+            configQR.colorLight = document.getElementById("transparentBg").checked ? "rgba(0,0,0,0)" : document.getElementById("bgColorPicker").value;
+            generarQR();
+        }
+
+        function descargarQRMovil() {
+            const canvasMaster = document.createElement('canvas');
+            const size = 1000;
+            canvasMaster.width = size;
+            canvasMaster.height = size;
+            const ctx = canvasMaster.getContext('2d');
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, size, size);
+
+            let frameColor = getComputedStyle(document.documentElement).getPropertyValue('--frame-color').trim() || "#000000";
+            let framePhrase = document.getElementById("framePhraseInput").value || "SCAN ME";
+            let idx = configQR.marcoIndex;
+
+            if (idx > 0) {
+                ctx.lineWidth = 30;
+                ctx.strokeStyle = frameColor;
+                ctx.fillStyle = frameColor;
+
+                if (idx === 1 || idx === 2 || idx === 3) {
+                    ctx.beginPath();
+                    ctx.roundRect(50, 50, size - 100, size - 100, 60);
+                    ctx.stroke();
+
+                    ctx.font = "900 32px -apple-system, sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    
+                    let boxW = ctx.measureText(framePhrase).width + 70;
+                    let boxY = (idx === 3) ? 75 : size - 125;
+                    
+                    ctx.beginPath();
+                    ctx.roundRect(size / 2 - boxW / 2, boxY, boxW, 55, 10);
+                    ctx.fill();
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillText(framePhrase, size / 2, boxY + 27.5);
+                } else {
+                    ctx.beginPath();
+                    ctx.roundRect(50, 50, size - 100, size - 100, 40);
+                    ctx.stroke();
+                }
+            }
+
+            const qrCanvasImg = document.querySelector("#qrcode canvas");
+            const qrImageElement = document.querySelector("#qrcode img");
+
+            const continuarProceso = (qrSourceImg) => {
+                let qrSize = 650;
+                let qrX = (size - qrSize) / 2;
+                let qrY = (size - qrSize) / 2;
+                ctx.drawImage(qrSourceImg, qrX, qrY, qrSize, qrSize);
+
+                if (configQR.logoType !== 'none' && configQR.logoRaw) {
+                    const renderizarLogo = (imgObj) => {
+                        let lSize = 140;
+                        let lX = (size - lSize) / 2;
+                        let lY = (size - lSize) / 2;
+
+                        ctx.fillStyle = "#ffffff";
+                        ctx.beginPath();
+                        ctx.roundRect(lX - 10, lY - 10, lSize + 20, lSize + 20, 16);
+                        ctx.fill();
+                        ctx.drawImage(imgObj, lX, lY, lSize, lSize);
+                        finalizarGeneracion(canvasMaster);
+                    };
+
+                    if (configQR.logoType === 'svg') {
+                        const blob = new Blob([configQR.logoRaw], { type: 'image/svg+xml;charset=utf-8' });
+                        const url = URL.createObjectURL(blob);
+                        const img = new Image();
+                        img.onload = () => { renderizarLogo(img); URL.revokeObjectURL(url); };
+                        img.src = url;
+                    } else {
+                        const img = new Image();
+                        img.crossOrigin = "anonymous";
+                        img.onload = () => renderizarLogo(img);
+                        img.src = configQR.logoRaw;
+                    }
+                } else {
+                    finalizarGeneracion(canvasMaster);
+                }
+            };
+
+            if (qrCanvasImg) {
+                let tImg = new Image();
+                tImg.onload = () => continuarProceso(tImg);
+                tImg.src = qrCanvasImg.toDataURL("image/png");
+            } else if (qrImageElement) {
+                let tImg = new Image();
+                tImg.crossOrigin = "anonymous";
+                tImg.onload = () => continuarProceso(tImg);
+                tImg.src = qrImageElement.src;
+            }
+        }
+
+        function finalizarGeneracion(canvas) {
+            const dataURL = canvas.toDataURL("image/png");
+            const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+            if (esIOS) {
+                let ventana = window.open();
+                if(ventana) {
+                    ventana.document.write(`<title>Guardar QR</title><img src="${dataURL}" style="width:100%;"/><p style="text-align:center;font-family:sans-serif;margin-top:20px;">Mantén presionada la imagen para guardarla en Fotos.</p>`);
+                } else {
+                    alert("Por favor, permite las ventanas emergentes para descargar la imagen en iOS.");
+                }
+            } else {
+                const link = document.createElement('a');
+                link.download = `qr-${tipoActual.toLowerCase()}-hd.png`;
+                link.href = dataURL;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+    </script>
+</body>
+</html>
