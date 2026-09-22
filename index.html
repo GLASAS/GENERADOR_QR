@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Generador QR Móvil - Android & iOS HD</title>
+    <title>Generador QR Móvil - Campos Vacíos HD</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
@@ -103,11 +103,11 @@
         
         input[type="text"], input[type="email"], select, textarea {
             width: 100%;
-            padding: 12px; /* Mejor área táctil para móviles */
+            padding: 12px;
             border: 1px solid var(--border);
             border-radius: 8px;
             background: #fff;
-            font-size: 0.95rem; /* Evita zoom automático en iOS */
+            font-size: 0.95rem;
             color: var(--text-primary);
         }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
@@ -288,7 +288,6 @@
         }
         .btn-download:active { background-color: var(--accent-hover); transform: scale(0.98); }
 
-        /* RESPONSIVO PARA PANTALLAS MÓVILES VERTICALES (Smartphones) */
         @media (max-width: 768px) {
             body { padding: 5px; align-items: flex-start; }
             .app-container { flex-direction: column; max-width: 100%; border-radius: 12px; }
@@ -307,11 +306,11 @@
         <!-- PANEL DE CONFIGURACIÓN -->
         <div class="config-panel">
             <div class="types-grid-top">
-                <div class="type-btn" onclick="seleccionarTipo('Enlace', this)">🔗 Enlace</div>
+                <div class="type-btn active" onclick="seleccionarTipo('Enlace', this)">🔗 Enlace</div>
                 <div class="type-btn" onclick="seleccionarTipo('Texto', this)">📝 Texto</div>
                 <div class="type-btn" onclick="seleccionarTipo('E-mail', this)">✉️ E-mail</div>
                 <div class="type-btn" onclick="seleccionarTipo('Llamada', this)">📞 Llamada</div>
-                <div class="type-btn active" onclick="seleccionarTipo('SMS', this)">💬 SMS</div>
+                <div class="type-btn" onclick="seleccionarTipo('SMS', this)">💬 SMS</div>
                 <div class="type-btn" onclick="seleccionarTipo('V-card', this)">📇 V-card</div>
                 <div class="type-btn" onclick="seleccionarTipo('WhatsApp', this)">🟢 WhatsApp</div>
                 <div class="type-btn" onclick="seleccionarTipo('WI-FI', this)">📶 WI-FI</div>
@@ -322,7 +321,12 @@
             <div class="form-group">
                 <h2><span class="step-badge">1</span> Contenido</h2>
                 
-                <div id="fields-SMS" class="dynamic-fields">
+                <div id="fields-Enlace" class="dynamic-fields">
+                    <label id="genericLabel" for="genericInput">Introduce tu enlace</label>
+                    <input type="text" id="genericInput" value="" placeholder="https://">
+                </div>
+
+                <div id="fields-SMS" class="dynamic-fields" style="display:none;">
                     <div class="row-inputs">
                         <div>
                             <label>País</label>
@@ -330,7 +334,7 @@
                         </div>
                         <div>
                             <label>Teléfono</label>
-                            <input type="text" id="smsPhone" placeholder="Número">
+                            <input type="text" id="smsPhone" value="" placeholder="Número">
                         </div>
                     </div>
                     <div><label>Mensaje</label><textarea id="smsBody" placeholder="Mensaje"></textarea></div>
@@ -338,12 +342,12 @@
 
                 <div id="fields-V-card" class="dynamic-fields" style="display:none;">
                     <div class="row-inputs">
-                        <div><label>Nombre</label><input type="text" id="vcName" placeholder="Nombre"></div>
-                        <div><label>Apellido</label><input type="text" id="vcLastName" placeholder="Apellido"></div>
+                        <div><label>Nombre</label><input type="text" id="vcName" value="" placeholder="Nombre"></div>
+                        <div><label>Apellido</label><input type="text" id="vcLastName" value="" placeholder="Apellido"></div>
                     </div>
                     <div class="row-inputs">
-                        <div><label>Teléfono</label><input type="text" id="vcPhone" placeholder="Teléfono"></div>
-                        <div><label>Móvil</label><input type="text" id="vcMobile" placeholder="Móvil"></div>
+                        <div><label>Teléfono</label><input type="text" id="vcPhone" value="" placeholder="Teléfono"></div>
+                        <div><label>Móvil</label><input type="text" id="vcMobile" value="" placeholder="Móvil"></div>
                     </div>
                 </div>
 
@@ -353,25 +357,20 @@
                             <label>País</label>
                             <select id="waCountry"><option value="+57" selected>+57</option><option value="+34">+34</option><option value="+1">+1</option></select>
                         </div>
-                        <div><label>Teléfono</label><input type="text" id="waPhone" placeholder="Número"></div>
+                        <div><label>Teléfono</label><input type="text" id="waPhone" value="" placeholder="Número"></div>
                     </div>
                     <div><label>Mensaje</label><textarea id="waBody" placeholder="Mensaje"></textarea></div>
                 </div>
 
                 <div id="fields-WI-FI" class="dynamic-fields" style="display:none;">
                     <div class="row-inputs">
-                        <div><label>Red (SSID)</label><input type="text" id="wifiSsid" placeholder="SSID"></div>
+                        <div><label>Red (SSID)</label><input type="text" id="wifiSsid" value="" placeholder="SSID"></div>
                         <div>
                             <label>Seguridad</label>
                             <select id="wifiEnc"><option value="WPA">WPA</option><option value="WEP">WEP</option><option value="nopass">Ninguna</option></select>
                         </div>
                     </div>
-                    <div><label>Contraseña</label><input type="text" id="wifiPass" placeholder="Contraseña"></div>
-                </div>
-
-                <div id="fields-generic" class="dynamic-fields" style="display:none;">
-                    <label id="genericLabel" for="genericInput">Contenido</label>
-                    <input type="text" id="genericInput" value="https://global.com" placeholder="https://">
+                    <div><label>Contraseña</label><input type="text" id="wifiPass" value="" placeholder="Contraseña"></div>
                 </div>
             </div>
 
@@ -465,7 +464,7 @@
     </div>
 
     <script>
-        let tipoActual = "SMS";
+        let tipoActual = "Enlace";
         let configQR = {
             colorDark: "#000000",
             colorLight: "#ffffff",
@@ -479,30 +478,34 @@
                 let country = document.getElementById("smsCountry").value;
                 let phone = document.getElementById("smsPhone").value.trim();
                 let body = encodeURIComponent(document.getElementById("smsBody").value.trim());
+                if (!phone && !body) return "";
                 return `SMSTO:${country}${phone}:${body}`;
             } else if (tipoActual === "V-card") {
                 let name = document.getElementById("vcName").value.trim();
                 let lname = document.getElementById("vcLastName").value.trim();
                 let phone = document.getElementById("vcPhone").value.trim();
                 let mobile = document.getElementById("vcMobile").value.trim();
+                if (!name && !lname && !phone && !mobile) return "";
                 return `BEGIN:VCARD\nVERSION:3.0\nN:${lname};${name};;;\nFN:${name} ${lname}\nTEL;TYPE=WORK:${phone}\nTEL;TYPE=CELL:${mobile}\nEND:VCARD`;
             } else if (tipoActual === "WhatsApp") {
                 let country = document.getElementById("waCountry").value.replace('+', '');
                 let phone = document.getElementById("waPhone").value.trim();
                 let body = encodeURIComponent(document.getElementById("waBody").value.trim());
+                if (!phone) return "";
                 return `https://wa.me/${country}${phone}?text=${body}`;
             } else if (tipoActual === "WI-FI") {
                 let ssid = document.getElementById("wifiSsid").value.trim();
                 let enc = document.getElementById("wifiEnc").value;
                 let pass = document.getElementById("wifiPass").value.trim();
+                if (!ssid) return "";
                 return `WIFI:S:${ssid};T:${enc};P:${pass};;`;
             } else {
-                return document.getElementById("genericInput").value.trim() || "https://global.com";
+                return document.getElementById("genericInput").value.trim();
             }
         }
 
         let qrcodeObj = new QRCode(document.getElementById("qrcode"), {
-            text: obtenerTextoQR(),
+            text: "",
             width: 180,
             height: 180,
             colorDark: configQR.colorDark,
@@ -522,14 +525,16 @@
         function generarQR() {
             let texto = obtenerTextoQR();
             document.getElementById("qrcode").innerHTML = "";
-            qrcodeObj = new QRCode(document.getElementById("qrcode"), {
-                text: texto,
-                width: 180,
-                height: 180,
-                colorDark: configQR.colorDark,
-                colorLight: configQR.colorLight,
-                correctLevel: QRCode.CorrectLevel.H
-            });
+            if (texto !== "") {
+                qrcodeObj = new QRCode(document.getElementById("qrcode"), {
+                    text: texto,
+                    width: 180,
+                    height: 180,
+                    colorDark: configQR.colorDark,
+                    colorLight: configQR.colorLight,
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
         }
 
         function seleccionarTipo(nombreTipo, elemento) {
@@ -537,15 +542,26 @@
             elemento.classList.add('active');
             tipoActual = nombreTipo;
 
-            document.querySelectorAll('.dynamic-fields').forEach(el => el.style.display = 'none');
-            if (nombreTipo === "SMS") document.getElementById("fields-SMS").style.display = "block";
-            else if (nombreTipo === "V-card") document.getElementById("fields-V-card").style.display = "block";
-            else if (nombreTipo === "WhatsApp") document.getElementById("fields-WhatsApp").style.display = "block";
-            else if (nombreTipo === "WI-FI") document.getElementById("fields-WI-FI").style.display = "block";
-            else {
-                document.getElementById("fields-generic").style.display = "block";
+            // Ocultar todos los módulos de campos
+            document.getElementById("fields-Enlace").style.display = "none";
+            document.getElementById("fields-SMS").style.display = "none";
+            document.getElementById("fields-V-card").style.display = "none";
+            document.getElementById("fields-WhatsApp").style.display = "none";
+            document.getElementById("fields-WI-FI").style.display = "none";
+
+            if (nombreTipo === "SMS") {
+                document.getElementById("fields-SMS").style.display = "block";
+            } else if (nombreTipo === "V-card") {
+                document.getElementById("fields-V-card").style.display = "block";
+            } else if (nombreTipo === "WhatsApp") {
+                document.getElementById("fields-WhatsApp").style.display = "block";
+            } else if (nombreTipo === "WI-FI") {
+                document.getElementById("fields-WI-FI").style.display = "block";
+            } else {
+                document.getElementById("fields-Enlace").style.display = "block";
                 document.getElementById("genericLabel").innerText = `Introduce tu ${nombreTipo.toLowerCase()}`;
-                document.getElementById("genericInput").value = nombreTipo === "Enlace" ? "https://global.com" : "Información";
+                document.getElementById("genericInput").value = "";
+                document.getElementById("genericInput").placeholder = nombreTipo === "Texto" ? "Escribe tu texto aquí..." : "https://";
             }
             generarQR();
         }
@@ -638,10 +654,13 @@
             generarQR();
         }
 
-        // ==========================================================
-        // DESCARGA BLINDADA PARA COMPATIBILIDAD MÓVIL (iOS Y ANDROID)
-        // ==========================================================
         function descargarQRMovil() {
+            let textoActual = obtenerTextoQR();
+            if (!textoActual) {
+                alert("Por favor, introduce contenido en el campo correspondiente para generar y descargar el código QR.");
+                return;
+            }
+
             const canvasMaster = document.createElement('canvas');
             const size = 1000;
             canvasMaster.width = size;
@@ -738,12 +757,9 @@
 
         function finalizarGeneracion(canvas) {
             const dataURL = canvas.toDataURL("image/png");
-            
-            // Detección automática para iOS (Safari suele bloquear las descargas automáticas por enlace programático)
             const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
             if (esIOS) {
-                // En iOS abrimos la imagen en una nueva pestaña para que el usuario mantenga pulsado y guarde la foto fácilmente
                 let ventana = window.open();
                 if(ventana) {
                     ventana.document.write(`<title>Guardar QR</title><img src="${dataURL}" style="width:100%;"/><p style="text-align:center;font-family:sans-serif;margin-top:20px;">Mantén presionada la imagen para guardarla en Fotos.</p>`);
@@ -751,7 +767,6 @@
                     alert("Por favor, permite las ventanas emergentes para descargar la imagen en iOS.");
                 }
             } else {
-                // Método estándar optimizado para Android y escritorio
                 const link = document.createElement('a');
                 link.download = `qr-${tipoActual.toLowerCase()}-hd.png`;
                 link.href = dataURL;
