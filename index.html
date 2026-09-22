@@ -3,150 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Generador QR Móvil - Campos Vacíos HD</title>
+    <title>AuraQR Studio - Creador Profesional de Códigos QR</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f0f4f8;
-            --card-bg: #ffffff;
-            --text-primary: #2d3748;
-            --text-secondary: #718096;
-            --accent: #319795;
-            --accent-hover: #2c7a7b;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-glass: blur(16px);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-light: #eef2ff;
             --border: #e2e8f0;
+            --shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.1);
             
-            --frame-color: #000000;
-            --frame-phrase: "SCAN ME";
-            --frame-font: 'Segoe UI', sans-serif;
+            --frame-color: #1e293b;
+            --frame-phrase: "ESCANÉAME";
+            --frame-font: 'Plus Jakarta Sans', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background-color: var(--bg-color);
+            background: var(--bg-gradient);
             color: var(--text-primary);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 10px;
+            padding: 20px 15px;
+        }
+
+        /* TÍTULO ELEGANTE Y CENTRADO */
+        .header-title {
+            text-align: center;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        .header-title h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-title p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
         .app-container {
             display: flex;
             flex-direction: row;
             background: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            max-width: 1150px;
+            backdrop-filter: var(--card-glass);
+            -webkit-backdrop-filter: var(--card-glass);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            max-width: 1100px;
             width: 100%;
             overflow: hidden;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
 
         .config-panel {
             flex: 1.3;
-            padding: 20px;
+            padding: 30px;
             border-right: 1px solid var(--border);
-            max-height: 85vh;
+            max-height: 82vh;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
 
+        .config-panel::-webkit-scrollbar { width: 6px; }
+        .config-panel::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
         .preview-panel {
             flex: 1;
-            background: #fafbfc;
-            padding: 20px;
+            background: rgba(248, 250, 252, 0.5);
+            padding: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        h2 { font-size: 1rem; color: var(--text-primary); margin-bottom: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        h2 { font-size: 0.95rem; color: var(--text-primary); margin-bottom: 14px; font-weight: 700; display: flex; align-items: center; gap: 10px; letter-spacing: 0.3px; text-transform: uppercase; }
         
         .step-badge {
-            background-color: #2d3748;
+            background-color: var(--accent);
             color: white;
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
-            font-size: 0.8rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
         }
 
         .types-grid-top {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 25px;
         }
 
         .type-btn {
-            background: #f7fafc;
+            background: #ffffff;
             border: 1px solid var(--border);
-            padding: 8px 2px;
-            border-radius: 8px;
-            font-size: 0.6rem;
+            padding: 10px 4px;
+            border-radius: 10px;
+            font-size: 0.7rem;
             font-weight: 600;
             color: var(--text-secondary);
             cursor: pointer;
             text-align: center;
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .type-btn.active { background: #e6fffa; border-color: var(--accent); color: var(--accent); }
+        .type-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .type-btn.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent); font-weight: 700; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15); }
 
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
         
         input[type="text"], input[type="email"], select, textarea {
             width: 100%;
-            padding: 12px;
+            padding: 12px 14px;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            background: #fff;
+            border-radius: 12px;
+            background: #ffffff;
             font-size: 0.95rem;
             color: var(--text-primary);
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
-        textarea { resize: vertical; min-height: 60px; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
+        textarea { resize: vertical; min-height: 70px; }
 
         .row-inputs {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
 
         .design-tabs {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 15px;
-            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-top: 25px;
         }
 
         .tab-btn {
-            padding: 8px 0;
+            padding: 10px 0;
             background: none;
             border: none;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
             color: var(--text-secondary);
             cursor: pointer;
             position: relative;
+            transition: color 0.2s;
         }
-        .tab-btn.active { color: var(--accent); }
+        .tab-btn:hover { color: var(--accent); }
+        .tab-btn.active { color: var(--accent); font-weight: 700; }
         .tab-btn.active::after {
             content: '';
             position: absolute;
             bottom: -1px;
             left: 0;
             width: 100%;
-            height: 2px;
+            height: 3px;
             background-color: var(--accent);
+            border-radius: 3px 3px 0 0;
         }
 
         .tab-content { display: none; }
@@ -154,116 +197,124 @@
 
         .scroll-grid {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             overflow-x: auto;
-            padding-bottom: 8px;
+            padding-bottom: 10px;
             margin-bottom: 15px;
             -webkit-overflow-scrolling: touch;
         }
-        .scroll-grid::-webkit-scrollbar { height: 4px; }
-        .scroll-grid::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
+        .scroll-grid::-webkit-scrollbar { height: 6px; }
+        .scroll-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
         .option-card {
-            min-width: 50px;
-            height: 50px;
+            min-width: 55px;
+            height: 55px;
             border: 2px solid var(--border);
-            border-radius: 8px;
-            background: #fff;
+            border-radius: 12px;
+            background: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 0.65rem;
+            font-size: 0.75rem;
             font-weight: bold;
             color: var(--text-secondary);
             position: relative;
             flex-shrink: 0;
+            transition: all 0.2s;
         }
-        .option-card.active { border-color: var(--accent); background: #e6fffa; color: var(--accent); }
-        .option-card svg { width: 22px; height: 22px; fill: #2d3748; }
+        .option-card:hover { border-color: #cbd5e1; }
+        .option-card.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+        .option-card svg { width: 24px; height: 24px; fill: var(--text-primary); transition: fill 0.2s; }
         .option-card.active svg { fill: var(--accent); }
 
         .logos-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 15px;
         }
 
         .color-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            background: #f8fafc;
-            padding: 10px;
-            border-radius: 8px;
+            gap: 12px;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 14px;
             border: 1px solid var(--border);
             margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .color-input-wrapper { display: flex; align-items: center; gap: 6px; }
+        .color-input-wrapper { display: flex; align-items: center; gap: 8px; }
         .color-picker-btn {
-            width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; padding: 0; overflow: hidden; flex-shrink: 0;
+            width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; padding: 0; overflow: hidden; flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .color-picker-btn input[type="color"] { width: 150%; height: 150%; transform: translate(-25%, -25%); cursor: pointer; }
 
         .checkbox-container {
-            display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-top: 6px; cursor: pointer;
+            display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-top: 8px; cursor: pointer;
         }
-        .checkbox-container input { width: 16px; height: 16px; accent-color: var(--accent); }
+        .checkbox-container input { width: 16px; height: 16px; accent-color: var(--accent); border-radius: 4px; }
 
         .upload-box {
-            display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; background: #fff; padding: 4px; margin-bottom: 15px; gap: 8px;
+            display: flex; align-items: center; border: 1px solid var(--border); border-radius: 12px; background: #ffffff; padding: 6px; margin-bottom: 15px; gap: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
-        .upload-box input[type="text"] { flex: 1; border: none; padding: 6px; font-size: 0.8rem; background: transparent; }
+        .upload-box input[type="text"] { flex: 1; border: none; padding: 6px 10px; font-size: 0.85rem; background: transparent; box-shadow: none; }
         .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; }
-        .btn-browse { background: #edf2f7; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--border); cursor: pointer; }
+        .btn-browse { background: var(--accent-light); color: var(--accent); padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; border: none; cursor: pointer; transition: background 0.2s; }
+        .btn-browse:hover { background: #e0e7ff; }
         .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
 
-        /* VISTA PREVIA ADAPTABLE */
+        /* VISTA PREVIA ELEGANTE */
         .qr-preview-box {
             background: #ffffff;
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 15px;
+            padding: 35px;
+            border-radius: 24px;
+            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 300px;
-            height: 300px;
+            width: 320px;
+            height: 320px;
             position: relative;
             border: 1px solid var(--border);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
         }
 
-        /* Marcos estructurados para móvil */
+        /* Marcos estructurados */
         .frame-style-0 { border: 1px solid var(--border); }
-        .frame-style-1 { border: 8px solid var(--frame-color) !important; border-radius: 24px !important; padding-bottom: 55px !important; }
-        .frame-style-1::after { content: var(--frame-phrase); position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 900; background: var(--frame-color); color: #fff; padding: 4px 14px; border-radius: 6px; white-space: nowrap; }
+        .frame-style-1 { border: 8px solid var(--frame-color) !important; border-radius: 28px !important; padding-bottom: 60px !important; }
+        .frame-style-1::after { content: var(--frame-phrase); position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 800; background: var(--frame-color); color: #fff; padding: 4px 16px; border-radius: 6px; white-space: nowrap; letter-spacing: 0.5px; }
         
-        .frame-style-2 { border: 8px solid var(--frame-color) !important; border-radius: 16px !important; padding-bottom: 55px !important; }
-        .frame-style-2::after { content: var(--frame-phrase); position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 900; background: var(--frame-color); color: #fff; width: 85%; text-align: center; padding: 4px 0; border-radius: 4px; }
+        .frame-style-2 { border: 8px solid var(--frame-color) !important; border-radius: 18px !important; padding-bottom: 60px !important; }
+        .frame-style-2::after { content: var(--frame-phrase); position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 800; background: var(--frame-color); color: #fff; width: 85%; text-align: center; padding: 4px 0; border-radius: 4px; letter-spacing: 0.5px; }
         
-        .frame-style-3 { border: 8px solid var(--frame-color) !important; border-radius: 24px !important; padding-top: 55px !important; }
-        .frame-style-3::before { content: var(--frame-phrase); position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 900; background: var(--frame-color); color: #fff; padding: 4px 14px; border-radius: 6px; white-space: nowrap; }
+        .frame-style-3 { border: 8px solid var(--frame-color) !important; border-radius: 28px !important; padding-top: 60px !important; }
+        .frame-style-3::before { content: var(--frame-phrase); position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-family: var(--frame-font); font-size: 0.75rem; font-weight: 800; background: var(--frame-color); color: #fff; padding: 4px 16px; border-radius: 6px; white-space: nowrap; letter-spacing: 0.5px; }
         
-        .frame-style-4 { border: 6px solid var(--frame-color) !important; border-radius: 50% !important; padding: 35px !important; }
-        .frame-style-9 { border: 10px solid var(--frame-color) !important; border-radius: 16px !important; }
+        .frame-style-4 { border: 6px solid var(--frame-color) !important; border-radius: 50% !important; padding: 40px !important; }
+        .frame-style-9 { border: 10px solid var(--frame-color) !important; border-radius: 20px !important; }
 
-        #qrcode { display: flex; justify-content: center; align-items: center; position: relative; width: 180px; height: 180px; }
-        #qrcode canvas, #qrcode img { width: 180px !important; height: 180px !important; display: block; }
+        #qrcode { display: flex; justify-content: center; align-items: center; position: relative; width: 190px; height: 190px; }
+        #qrcode canvas, #qrcode img { width: 190px !important; height: 190px !important; display: block; }
 
         #qr-logo-container {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
-            border: 2px solid #fff;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            border: 3px solid #fff;
             background: #fff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             display: none;
             align-items: center;
             justify-content: center;
@@ -271,35 +322,44 @@
             z-index: 10;
         }
         #qr-logo-container img { width: 100%; height: 100%; object-fit: cover; }
-        #qr-logo-container svg { width: 24px; height: 24px; fill: var(--accent); }
+        #qr-logo-container svg { width: 26px; height: 26px; fill: var(--accent); }
 
         .btn-download {
-            background-color: var(--accent);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
             color: white;
             border: none;
             width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 15px;
+            border-radius: 14px;
+            font-weight: 700;
             font-size: 0.95rem;
             cursor: pointer;
             text-align: center;
-            box-shadow: 0 2px 6px rgba(49, 151, 149, 0.3);
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+            transition: all 0.2s ease;
         }
-        .btn-download:active { background-color: var(--accent-hover); transform: scale(0.98); }
+        .btn-download:hover { transform: translateY(-1px); box-shadow: 0 12px 24px -5px rgba(99, 102, 241, 0.5); }
+        .btn-download:active { transform: translateY(1px); }
 
         @media (max-width: 768px) {
-            body { padding: 5px; align-items: flex-start; }
-            .app-container { flex-direction: column; max-width: 100%; border-radius: 12px; }
-            .config-panel { max-height: none; border-right: none; border-bottom: 1px solid var(--border); padding: 15px; }
-            .preview-panel { padding: 15px; }
-            .qr-preview-box { width: 260px; height: 260px; padding: 20px; }
-            #qrcode, #qrcode canvas, #qrcode img { width: 150px !important; height: 150px !important; }
+            body { padding: 10px; }
+            .header-title h1 { font-size: 1.8rem; }
+            .app-container { flex-direction: column; max-width: 100%; border-radius: 20px; }
+            .config-panel { max-height: none; border-right: none; border-bottom: 1px solid var(--border); padding: 20px; }
+            .preview-panel { padding: 20px; }
+            .qr-preview-box { width: 280px; height: 280px; padding: 25px; }
+            #qrcode, #qrcode canvas, #qrcode img { width: 160px !important; height: 160px !important; }
             .types-grid-top { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
 <body>
+
+    <!-- TÍTULO ELEGANTE Y CENTRADO -->
+    <div class="header-title">
+        <h1>AuraQR Studio</h1>
+        <p>Diseña y personaliza códigos QR profesionales al instante</p>
+    </div>
 
     <div class="app-container">
         
@@ -337,7 +397,7 @@
                             <input type="text" id="smsPhone" value="" placeholder="Número">
                         </div>
                     </div>
-                    <div><label>Mensaje</label><textarea id="smsBody" placeholder="Mensaje"></textarea></div>
+                    <div><label>Mensaje</label><textarea id="smsBody" placeholder="Escribe tu mensaje..."></textarea></div>
                 </div>
 
                 <div id="fields-V-card" class="dynamic-fields" style="display:none;">
@@ -359,18 +419,18 @@
                         </div>
                         <div><label>Teléfono</label><input type="text" id="waPhone" value="" placeholder="Número"></div>
                     </div>
-                    <div><label>Mensaje</label><textarea id="waBody" placeholder="Mensaje"></textarea></div>
+                    <div><label>Mensaje</label><textarea id="waBody" placeholder="Mensaje inicial..."></textarea></div>
                 </div>
 
                 <div id="fields-WI-FI" class="dynamic-fields" style="display:none;">
                     <div class="row-inputs">
-                        <div><label>Red (SSID)</label><input type="text" id="wifiSsid" value="" placeholder="SSID"></div>
+                        <div><label>Red (SSID)</label><input type="text" id="wifiSsid" value="" placeholder="Nombre de red"></div>
                         <div>
                             <label>Seguridad</label>
                             <select id="wifiEnc"><option value="WPA">WPA</option><option value="WEP">WEP</option><option value="nopass">Ninguna</option></select>
                         </div>
                     </div>
-                    <div><label>Contraseña</label><input type="text" id="wifiPass" value="" placeholder="Contraseña"></div>
+                    <div><label>Contraseña</label><input type="text" id="wifiPass" value="" placeholder="Contraseña de Wi-Fi"></div>
                 </div>
             </div>
 
@@ -397,13 +457,13 @@
                     <div class="row-inputs" style="margin-top: 10px;">
                         <div>
                             <label for="framePhraseInput">Texto marco</label>
-                            <input type="text" id="framePhraseInput" value="SCAN ME" oninput="actualizarFraseMarco()">
+                            <input type="text" id="framePhraseInput" value="ESCANÉAME" oninput="actualizarFraseMarco()">
                         </div>
                         <div>
                             <label for="frameColorInput">Color marco</label>
                             <div class="color-input-wrapper">
-                                <input type="text" id="frameColorInput" value="#000000" oninput="actualizarColorMarcoTexto('text')">
-                                <div class="color-picker-btn"><input type="color" id="frameColorPicker" value="#000000" oninput="actualizarColorMarcoTexto('picker')"></div>
+                                <input type="text" id="frameColorInput" value="#1e293b" oninput="actualizarColorMarcoTexto('text')">
+                                <div class="color-picker-btn"><input type="color" id="frameColorPicker" value="#1e293b" oninput="actualizarColorMarcoTexto('picker')"></div>
                             </div>
                         </div>
                     </div>
@@ -422,28 +482,28 @@
                         <div>
                             <label>Puntos QR</label>
                             <div class="color-input-wrapper">
-                                <input type="text" id="fgColorText" value="#000000" oninput="actualizarColorTexto('fg')">
-                                <div class="color-picker-btn"><input type="color" id="fgColorPicker" value="#000000" oninput="actualizarColorPicker('fg')"></div>
+                                <input type="text" id="fgColorText" value="#1e293b" oninput="actualizarColorTexto('fg')">
+                                <div class="color-picker-btn"><input type="color" id="fgColorPicker" value="#1e293b" oninput="actualizarColorPicker('fg')"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div id="tab-logo" class="tab-content">
-                    <label>Subir logo:</label>
+                    <label>Subir logo personalizado:</label>
                     <div class="upload-box">
-                        <input type="text" id="fileNameDisplay" value="Elegir archivo" readonly>
+                        <input type="text" id="fileNameDisplay" value="Elegir archivo..." readonly>
                         <div class="upload-btn-wrapper">
-                            <button class="btn-browse">Buscar</button>
+                            <button class="btn-browse">Examinar</button>
                             <input type="file" id="logoFileinput" accept="image/*" onchange="cargarLogoLocal(event)">
                         </div>
                     </div>
 
-                    <label>O predeterminados:</label>
+                    <label>O selecciona un icono:</label>
                     <div class="logos-grid">
-                        <div class="option-card active" onclick="seleccionarLogoPreset('none', this)"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#718096"/></svg></div>
-                        <div class="option-card" onclick="seleccionarLogoPreset('link', this)"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1z" fill="#6b46c1"/></svg></div>
-                        <div class="option-card" onclick="seleccionarLogoPreset('whatsapp', this)"><svg viewBox="0 0 24 24"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.42 1.27 4.88L2 22l5.25-1.35c1.41.77 3.03 1.21 4.79 1.21 5.52 0 10-4.48 10-10s-4.48-10-10-10z" fill="#38a169"/></svg></div>
+                        <div class="option-card active" onclick="seleccionarLogoPreset('none', this)"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#64748b"/></svg></div>
+                        <div class="option-card" onclick="seleccionarLogoPreset('link', this)"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1z" fill="#6366f1"/></svg></div>
+                        <div class="option-card" onclick="seleccionarLogoPreset('whatsapp', this)"><svg viewBox="0 0 24 24"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.42 1.27 4.88L2 22l5.25-1.35c1.41.77 3.03 1.21 4.79 1.21 5.52 0 10-4.48 10-10s-4.48-10-10-10z" fill="#10b981"/></svg></div>
                     </div>
                 </div>
             </div>
@@ -466,7 +526,7 @@
     <script>
         let tipoActual = "Enlace";
         let configQR = {
-            colorDark: "#000000",
+            colorDark: "#1e293b",
             colorLight: "#ffffff",
             logoRaw: null,
             logoType: 'none',
@@ -506,8 +566,8 @@
 
         let qrcodeObj = new QRCode(document.getElementById("qrcode"), {
             text: "",
-            width: 180,
-            height: 180,
+            width: 190,
+            height: 190,
             colorDark: configQR.colorDark,
             colorLight: configQR.colorLight,
             correctLevel: QRCode.CorrectLevel.H
@@ -528,8 +588,8 @@
             if (texto !== "") {
                 qrcodeObj = new QRCode(document.getElementById("qrcode"), {
                     text: texto,
-                    width: 180,
-                    height: 180,
+                    width: 190,
+                    height: 190,
                     colorDark: configQR.colorDark,
                     colorLight: configQR.colorLight,
                     correctLevel: QRCode.CorrectLevel.H
@@ -542,7 +602,6 @@
             elemento.classList.add('active');
             tipoActual = nombreTipo;
 
-            // Ocultar todos los módulos de campos
             document.getElementById("fields-Enlace").style.display = "none";
             document.getElementById("fields-SMS").style.display = "none";
             document.getElementById("fields-V-card").style.display = "none";
@@ -581,7 +640,7 @@
         }
 
         function actualizarFraseMarco() {
-            let texto = document.getElementById("framePhraseInput").value || "SCAN ME";
+            let texto = document.getElementById("framePhraseInput").value || "ESCANÉAME";
             document.documentElement.style.setProperty('--frame-phrase', `"${texto}"`);
         }
 
@@ -592,8 +651,8 @@
         }
 
         const svgPresets = {
-            link: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1z" fill="#6b46c1"/></svg>',
-            whatsapp: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.42 1.27 4.88L2 22l5.25-1.35c1.41.77 3.03 1.21 4.79 1.21 5.52 0 10-4.48 10-10s-4.48-10-10-10z" fill="#38a169"/></svg>'
+            link: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1z" fill="#6366f1"/></svg>',
+            whatsapp: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.42 1.27 4.88L2 22l5.25-1.35c1.41.77 3.03 1.21 4.79 1.21 5.52 0 10-4.48 10-10s-4.48-10-10-10z" fill="#10b981"/></svg>'
         };
 
         function seleccionarLogoPreset(tipo, elemento) {
@@ -670,8 +729,8 @@
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, size, size);
 
-            let frameColor = getComputedStyle(document.documentElement).getPropertyValue('--frame-color').trim() || "#000000";
-            let framePhrase = document.getElementById("framePhraseInput").value || "SCAN ME";
+            let frameColor = getComputedStyle(document.documentElement).getPropertyValue('--frame-color').trim() || "#1e293b";
+            let framePhrase = document.getElementById("framePhraseInput").value || "ESCANÉAME";
             let idx = configQR.marcoIndex;
 
             if (idx > 0) {
@@ -684,15 +743,15 @@
                     ctx.roundRect(50, 50, size - 100, size - 100, 60);
                     ctx.stroke();
 
-                    ctx.font = "900 32px -apple-system, sans-serif";
+                    ctx.font = "800 30px 'Plus Jakarta Sans', sans-serif";
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
                     
-                    let boxW = ctx.measureText(framePhrase).width + 70;
+                    let boxW = ctx.measureText(framePhrase).width + 80;
                     let boxY = (idx === 3) ? 75 : size - 125;
                     
                     ctx.beginPath();
-                    ctx.roundRect(size / 2 - boxW / 2, boxY, boxW, 55, 10);
+                    ctx.roundRect(size / 2 - boxW / 2, boxY, boxW, 55, 12);
                     ctx.fill();
                     ctx.fillStyle = "#ffffff";
                     ctx.fillText(framePhrase, size / 2, boxY + 27.5);
@@ -768,7 +827,7 @@
                 }
             } else {
                 const link = document.createElement('a');
-                link.download = `qr-${tipoActual.toLowerCase()}-hd.png`;
+                link.download = `aura-qr-hd.png`;
                 link.href = dataURL;
                 document.body.appendChild(link);
                 link.click();
